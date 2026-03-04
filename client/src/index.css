@@ -831,3 +831,40 @@ textarea::-webkit-scrollbar-thumb {
 .btn.help-btn {
   color: var(--white);
 }
+
+/* ---- New Dynamic Speakers Sidebar ---- */
+.speakers-list::-webkit-scrollbar {
+  width: 4px;
+}
+.speakers-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.speakers-list::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 10px;
+}
+.speaker-field-group {
+  transition: var(--transition);
+}
+.speaker-field-group:hover {
+  background: rgba(255,255,255,0.06) !important;
+  transform: translateX(2px);
+}
+
+/* ---- Card Preview Speakers Grid ---- */
+.speakers-grid::-webkit-scrollbar {
+  width: 0px;
+}
+.card-right::-webkit-scrollbar {
+  width: 0px;
+}
+
+@media (max-width: 1024px) {
+  .app-layout {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    max-height: 400px;
+  }
+}
