@@ -7,6 +7,7 @@ import pptxgen from "pptxgenjs";
 export default function App() {
   const [transcript, setTranscript] = useState("");
   const [summary, setSummary] = useState("");
+  const [isEditingSummary, setIsEditingSummary] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [moderator, setModerator] = useState({ name: "Master Moderator", designation: "Chief Analyst", photo: null });
   const [speakers, setSpeakers] = useState([]);
@@ -365,7 +366,77 @@ export default function App() {
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            {/* ── Summary Editor ── */}
+            {summary && (
+              <div style={{ marginTop: 10, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "14px 16px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: "var(--accent)", letterSpacing: "0.04em", textTransform: "uppercase" }}>✏️ Edit Summary</span>
+                  <button
+                    className="btn btn-primary"
+                    style={{ padding: "4px 12px", fontSize: 11, background: isEditingSummary ? "#10b981" : "var(--accent)" }}
+                    onClick={() => setIsEditingSummary(v => !v)}
+                  >
+                    {isEditingSummary ? "✅ Done" : "✏️ Edit"}
+                  </button>
+                </div>
+
+                {isEditingSummary && (
+                  <>
+                    {/* Quick-clean action buttons */}
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 10 }}>
+                      <button
+                        className="btn btn-outline"
+                        style={{ fontSize: 10, padding: "3px 10px" }}
+                        onClick={() => setSummary(s => s.replace(/,/g, ""))}
+                      >Remove Commas (,)</button>
+                      <button
+                        className="btn btn-outline"
+                        style={{ fontSize: 10, padding: "3px 10px" }}
+                        onClick={() => setSummary(s => s.replace(/\?/g, ""))}
+                      >Remove Question Marks (?)</button>
+                      <button
+                        className="btn btn-outline"
+                        style={{ fontSize: 10, padding: "3px 10px" }}
+                        onClick={() => setSummary(s => s.replace(/  +/g, " ").trim())}
+                      >Remove Extra Spaces</button>
+                      <button
+                        className="btn btn-outline"
+                        style={{ fontSize: 10, padding: "3px 10px" }}
+                        onClick={() => setSummary(s => s.replace(/\.(?=[^\s])/g, ". "))}
+                      >Fix Missing Spaces After .</button>
+                      <button
+                        className="btn btn-outline"
+                        style={{ fontSize: 10, padding: "3px 10px", color: "#ef4444", borderColor: "#ef4444" }}
+                        onClick={() => setSummary(s => s.replace(/[,?]/g, "").replace(/  +/g, " ").trim())}
+                      >🧹 Clean All</button>
+                    </div>
+
+                    {/* Editable textarea */}
+                    <textarea
+                      value={summary}
+                      onChange={e => setSummary(e.target.value)}
+                      rows={6}
+                      style={{
+                        width: "100%",
+                        background: "rgba(255,255,255,0.05)",
+                        color: "#e2e8f0",
+                        border: "1px solid rgba(99,102,241,0.4)",
+                        borderRadius: 8,
+                        padding: "10px 12px",
+                        fontSize: 12,
+                        lineHeight: 1.65,
+                        resize: "vertical",
+                        outline: "none",
+                        fontFamily: "inherit",
+                        boxSizing: "border-box",
+                      }}
+                    />
+                  </>
+                )}
+              </div>
+            )}
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 10 }}>
               <button className="btn btn-outline" style={{ justifyContent: "center" }} onClick={downloadImage}>🖼️ PNG Image</button>
               <button className="btn btn-outline" style={{ justifyContent: "center" }} onClick={downloadPPT}>📊 PPT Slide</button>
             </div>
