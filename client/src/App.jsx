@@ -21,6 +21,14 @@ export default function App() {
   const transcriptRef = useRef("");
   const captureRef = useRef(null);
   const [apiKey, setApiKey] = useState("");
+  const [selectedLang, setSelectedLang] = useState("en-US");
+
+  const languages = [
+    { code: "en-US", name: "English" },
+    { code: "hi-IN", name: "Hindi (हिन्दी)" },
+    { code: "mr-IN", name: "Marathi (मराठी)" },
+    { code: "hi-IN", name: "Mixed (Hindi + English + Marathi)" },
+  ];
 
   // ── Draggable Logo State ─────────────────────────────────────
   const [logoPos, setLogoPos] = useState({ x: 10, y: 10 });
@@ -82,7 +90,7 @@ export default function App() {
     const recognition = new SR();
     recognition.continuous = true;
     recognition.interimResults = true;
-    recognition.lang = "en-US";
+    recognition.lang = selectedLang;
     transcriptRef.current = transcript;
     recognition.onresult = (e) => {
       let interim = "";
@@ -172,6 +180,30 @@ export default function App() {
             <small style={{ color: '#aaa', fontSize: '11px', marginTop: '5px', display: 'block' }}>
               Leave blank to use local summarization — no API needed!
             </small>
+          </div>
+          <div className="field" style={{ marginTop: '15px' }}>
+            <label>Recording Language</label>
+            <select
+              value={selectedLang}
+              onChange={(e) => setSelectedLang(e.target.value)}
+              style={{
+                width: '100%',
+                background: 'rgba(255,255,255,0.05)',
+                color: 'white',
+                border: '1px solid var(--border-color)',
+                borderRadius: '8px',
+                padding: '10px',
+                fontSize: '13px',
+                outline: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              {languages.map((lang) => (
+                <option key={lang.code} value={lang.code} style={{ background: '#1e293b' }}>
+                  {lang.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
@@ -317,7 +349,6 @@ export default function App() {
 
                   {(moderator.name || moderator.designation || moderator.photo) && (
                     <div className="moderator-card" style={{ background: "rgba(99, 102, 241, 0.15)", padding: "12px", borderRadius: "12px", border: "1px solid rgba(99, 102, 241, 0.3)", marginBottom: "5px", flexShrink: 0 }}>
-                      <div className="badge" style={{ background: "var(--primary)", padding: "2px 8px", borderRadius: 4, fontSize: 8, fontWeight: 800, marginBottom: 8, display: "inline-block" }}>MODERATOR</div>
                       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                         <div className="mini-photo" style={{ width: 55, height: 55, borderRadius: "50%", background: moderator.photo ? `url(${moderator.photo}) center/cover no-repeat` : "#334155", flexShrink: 0, border: "2px solid var(--primary)" }}></div>
                         <div style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>

@@ -40,8 +40,8 @@ app.post('/api/summary', async (req, res) => {
                 const response = await openai.chat.completions.create({
                     model: "gpt-4o-mini",
                     messages: [
-                        { role: "system", content: "You are a professional event insights analyst. Synthesize the transcript into one dense, flawless paragraph of professional insights. No bullet points." },
-                        { role: "user", content: `TRANSCRIPT:\n\n${transcript}` }
+                        { role: "system", content: "You are a professional event insights analyst. The transcript may be in mixed languages (English, Hindi, and Marathi). First, internally translate any non-English parts to English, then synthesize the entire context into one dense, flawless paragraph of professional insights in English. No bullet points." },
+                        { role: "user", content: `TRANSCRIPT (potentially mixed English/Hindi/Marathi):\n\n${transcript}` }
                     ],
                     temperature: 0.7,
                 });
@@ -60,7 +60,11 @@ app.post('/api/summary', async (req, res) => {
                 try {
                     console.log(`Trying Gemini model: ${modelName}...`);
                     const model = genAI.getGenerativeModel({ model: modelName });
-                    const result = await model.generateContent(`Synthesize this transcript into one dense, professional paragraph:\n\n${transcript}`);
+                    const result = await model.generateContent(`The following transcript is from an Indian event and contains a mix of English, Hindi, and Marathi. 
+                    1. Translate all non-English parts to English.
+                    2. Synthesize the total translated transcript into one dense, professional insights paragraph in English.
+                    
+                    TRANSCRIPT:\n\n${transcript}`);
                     const text = result.response.text();
                     if (text) {
                         finalSummary = text;
